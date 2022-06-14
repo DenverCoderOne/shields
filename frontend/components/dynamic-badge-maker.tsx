@@ -18,6 +18,16 @@ interface InputDef {
   placeholder?: string
 }
 
+const formatters = [
+  'metric',
+  'ordinalNumber',
+  'starRating',
+  'omitv',
+  'addv',
+  'formatDate',
+  'formatRelativeDate',
+]
+
 const inputs = [
   { name: 'label' },
   { name: 'dataUrl', placeholder: 'data url' },
@@ -25,7 +35,6 @@ const inputs = [
   { name: 'color' },
   { name: 'prefix' },
   { name: 'suffix' },
-  { name: 'formatter' },
 ] as InputDef[]
 
 export default function DynamicBadgeMaker({
@@ -110,6 +119,14 @@ export default function DynamicBadgeMaker({
           value={values[name]}
         />
       ))}
+      <select name="formatter" onChange={onChange} value={values.formatter}>
+        <option value="">formatter</option>
+        {formatters.map(formatter => (
+          <option key={formatter} value={formatter}>
+            {formatter}
+          </option>
+        ))}
+      </select>{' '}
       <button disabled={!isValid}>Make Badge</button>
     </form>
   )
