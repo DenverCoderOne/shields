@@ -1,24 +1,13 @@
 import React from 'react'
-import { Link } from 'gatsby'
 import styled from 'styled-components'
 import { staticBadgeUrl } from '../../core/badge-urls/make-badge-url'
 import { advertisedStyles, shieldsLogos } from '../lib/supported-features'
-// ts-expect-error: because reasons?
-import StaticBadgeMaker from './static-badge-maker'
 import DynamicBadgeMaker from './dynamic-badge-maker'
 import { H2, H3, Badge, VerticalSpace } from './common'
 import { Snippet, StyledCode } from './snippet'
 
 const LogoName = styled.span`
   white-space: nowrap;
-`
-
-const Lhs = styled.td`
-  text-align: right;
-`
-
-const EscapingRuleTable = styled.table`
-  margin: auto;
 `
 
 const QueryParamTable = styled.table`
@@ -51,22 +40,6 @@ function QueryParam({
         <Snippet snippet={snippet} />
       </QueryParamSyntax>
       <QueryParamDocumentation>{documentation}</QueryParamDocumentation>
-    </tr>
-  )
-}
-
-function EscapingConversion({
-  lhs,
-  rhs,
-}: {
-  lhs: JSX.Element
-  rhs: JSX.Element
-}): JSX.Element {
-  return (
-    <tr>
-      <Lhs>{lhs}</Lhs>
-      <td>→</td>
-      <td>{rhs}</td>
     </tr>
   )
 }
@@ -132,118 +105,10 @@ function NamedLogos(): JSX.Element {
   return <>{result}</>
 }
 
-function StaticBadgeEscapingRules(): JSX.Element {
-  return (
-    <EscapingRuleTable>
-      <tbody>
-        <EscapingConversion
-          key="dashes"
-          lhs={
-            <span>
-              Dashes <code>--</code>
-            </span>
-          }
-          rhs={
-            <span>
-              <code>-</code> Dash
-            </span>
-          }
-        />
-        <EscapingConversion
-          key="underscores"
-          lhs={
-            <span>
-              Underscores <code>__</code>
-            </span>
-          }
-          rhs={
-            <span>
-              <code>_</code> Underscore
-            </span>
-          }
-        />
-        <EscapingConversion
-          key="spaces"
-          lhs={
-            <span>
-              <code>_</code> or Space <code>&nbsp;</code>
-            </span>
-          }
-          rhs={
-            <span>
-              <code>&nbsp;</code> Space
-            </span>
-          }
-        />
-      </tbody>
-    </EscapingRuleTable>
-  )
-}
-
 export default function Usage({ baseUrl }: { baseUrl: string }): JSX.Element {
   return (
     <section>
       <H2 id="your-badge">Your Badge</H2>
-
-      <H3>Static</H3>
-      <StaticBadgeMaker baseUrl={baseUrl} />
-
-      <VerticalSpace />
-
-      <p>Using dash "-" separator</p>
-      <p>
-        <Snippet snippet={`${baseUrl}/badge/<LABEL>-<MESSAGE>-<COLOR>`} />
-      </p>
-      <StaticBadgeEscapingRules />
-      <p>Using query string parameters</p>
-      <p>
-        <Snippet
-          snippet={`${baseUrl}/static/v1?label=<LABEL>&message=<MESSAGE>&color=<COLOR>`}
-        />
-      </p>
-
-      <H3 id="colors">Colors</H3>
-      <p>
-        <ColorExamples
-          baseUrl={baseUrl}
-          colors={[
-            'brightgreen',
-            'green',
-            'yellowgreen',
-            'yellow',
-            'orange',
-            'red',
-            'blue',
-            'lightgrey',
-          ]}
-        />
-        <br />
-        <ColorExamples
-          baseUrl={baseUrl}
-          colors={[
-            'success',
-            'important',
-            'critical',
-            'informational',
-            'inactive',
-          ]}
-        />
-        <br />
-        <ColorExamples
-          baseUrl={baseUrl}
-          colors={['blueviolet', 'ff69b4', '9cf']}
-        />
-      </p>
-
-      <H3>Endpoint</H3>
-
-      <p>
-        <Snippet snippet={`${baseUrl}/endpoint?url=<URL>&style<STYLE>`} />
-      </p>
-
-      <p>
-        Create badges from <Link to="/endpoint">your own JSON endpoint</Link>.
-      </p>
 
       <H3 id="dynamic-badge">Dynamic</H3>
 
@@ -293,6 +158,41 @@ export default function Usage({ baseUrl }: { baseUrl: string }): JSX.Element {
           </a>
           &gt;&amp;color=&lt;COLOR&gt;&amp;prefix=&lt;PREFIX&gt;&amp;suffix=&lt;SUFFIX&gt;&amp;formatter=&lt;FORMATTER&gt;
         </StyledCode>
+      </p>
+
+      <VerticalSpace />
+
+      <H3 id="colors">Colors</H3>
+      <p>
+        <ColorExamples
+          baseUrl={baseUrl}
+          colors={[
+            'brightgreen',
+            'green',
+            'yellowgreen',
+            'yellow',
+            'orange',
+            'red',
+            'blue',
+            'lightgrey',
+          ]}
+        />
+        <br />
+        <ColorExamples
+          baseUrl={baseUrl}
+          colors={[
+            'success',
+            'important',
+            'critical',
+            'informational',
+            'inactive',
+          ]}
+        />
+        <br />
+        <ColorExamples
+          baseUrl={baseUrl}
+          colors={['blueviolet', 'ff69b4', '9cf']}
+        />
       </p>
 
       <VerticalSpace />

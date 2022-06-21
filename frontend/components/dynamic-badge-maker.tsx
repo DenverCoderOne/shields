@@ -18,15 +18,15 @@ interface InputDef {
   placeholder?: string
 }
 
-const formatters = [
-  'metric',
-  'ordinalNumber',
-  'starRating',
-  'omitv',
-  'addv',
-  'formatDate',
-  'formatRelativeDate',
-]
+const formatters = {
+  metric: '3.2k',
+  starRating: '★★★☆☆',
+  ordinalNumber: '9ᵗʰ',
+  omitv: '1.2.0',
+  addv: 'v1.2.0',
+  formatDate: 'january 2019',
+  formatRelativeDate: '1 day ago',
+}
 
 const inputs = [
   { name: 'label' },
@@ -121,9 +121,9 @@ export default function DynamicBadgeMaker({
       ))}
       <select name="formatter" onChange={onChange} value={values.formatter}>
         <option value="">formatter</option>
-        {formatters.map(formatter => (
-          <option key={formatter} value={formatter}>
-            {formatter}
+        {Object.entries(formatters).map(([key, value]) => (
+          <option key={key} value={key}>
+            {key} ({value})
           </option>
         ))}
       </select>{' '}
