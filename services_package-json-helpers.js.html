@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: core/base-service/base-yaml</title>
+    <title>JSDoc: Source: services/package-json-helpers.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,101 +17,96 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: core/base-service/base-yaml</h1>
+    <h1 class="page-title">Source: services/package-json-helpers.js</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Common functions and utilities for tasks related to package.json
+ *
+ * @module
+ */
 
-<article>
-    <div class="container-overview">
-    
-        
+import Joi from 'joi'
+import { InvalidParameter } from './index.js'
 
-        
+/**
+ * Joi schema for validating dependency map.
+ *
+ * @type {Joi}
+ */
+const isDependencyMap = Joi.object()
+  .pattern(
+    /./,
+    // This accepts a semver range, a URL, and many other possible values.
+    Joi.string().min(1).required()
+  )
+  .default({})
 
+/**
+ * Joi schema for validating package json object.
+ * Checks if the object has all the dependency types and the dependency types are valid.
+ *
+ * @type {Joi}
+ */
+const isPackageJsonWithDependencies = Joi.object({
+  dependencies: isDependencyMap,
+  devDependencies: isDependencyMap,
+  peerDependencies: isDependencyMap,
+  optionalDependencies: isDependencyMap,
+}).required()
 
-<dl class="details">
+/**
+ * Determines the dependency version based on the dependency type.
+ *
+ * @param {object} attrs - Refer to individual attributes
+ * @param {string} attrs.kind - Wanted dependency type, defaults to prod
+ * @param {string} attrs.wantedDependency - Name of the wanted dependency
+ * @param {object} attrs.dependencies - Map of dependencies
+ * @param {object} attrs.devDependencies - Map of dev dependencies
+ * @param {object} attrs.peerDependencies - Map of peer dependencies
+ * @param {object} attrs.optionalDependencies - Map of optional dependencies
+ * @throws {string} - Error message if unknown dependency type provided
+ * @throws {InvalidParameter} - Error if wanted dependency is not present
+ * @returns {string} Semver range of the wanted dependency (eg. ~2.1.6 or >=3.0.0 or &lt;4.0.0)
+ */
+function getDependencyVersion({
+  kind = 'prod',
+  wantedDependency,
+  dependencies,
+  devDependencies,
+  peerDependencies,
+  optionalDependencies,
+}) {
+  const dependencyMaps = {
+    peer: peerDependencies,
+    optional: optionalDependencies,
+    dev: devDependencies,
+    prod: dependencies,
+  }
 
-    
+  if (!(kind in dependencyMaps)) {
+    throw Error(`Not very kind: ${kind}`)
+  }
+  const range = dependencyMaps[kind][wantedDependency]
+  if (range === undefined) {
+    throw new InvalidParameter({
+      prettyMessage: `${kind} dependency not found`,
+    })
+  }
 
-    
+  return range
+}
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_base-service_base-yaml.js.html">core/base-service/base-yaml.js</a>, <a href="core_base-service_base-yaml.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="module-core_base-service_base-yaml-BaseYamlService.html">BaseYamlService</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+export { isDependencyMap, isPackageJsonWithDependencies, getDependencyVersion }
+</code></pre>
+        </article>
+    </section>
 
 
 
